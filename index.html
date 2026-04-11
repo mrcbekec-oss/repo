@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Online Football - Antigravity</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Three.js -->
+    <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <!-- PeerJS -->
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+</head>
+<body>
+    <div id="ui-overlay">
+        <div id="lobby" class="glass-panel">
+            <h1>3D Online Football</h1>
+            <p>Bir lobby kurun veya arkadaşınızın ID'si ile bağlanın.</p>
+            
+            <div class="input-group">
+                <button id="btn-host" class="btn-primary">Lobby Kur (Host)</button>
+            </div>
+            
+            <div class="separator"><span>veya</span></div>
+            
+            <div class="input-group">
+                <input type="text" id="join-id" placeholder="Lobby ID Girin...">
+                <button id="btn-join" class="btn-secondary">Bağlan (Join)</button>
+            </div>
+            
+            <div id="status-msg"></div>
+        </div>
+
+        <div id="game-hud" class="hidden">
+            <div class="score-board glass-panel">
+                <div class="team-a">Siz: <span id="score-a">0</span></div>
+                <div class="vs">VS</div>
+                <div class="team-b">Rakip: <span id="score-b">0</span></div>
+            </div>
+            <div id="peer-id-display" class="glass-panel">ID: <span id="display-id">...</span></div>
+            <div class="controls-hint">WASD: Hareket | Space: Şut</div>
+        </div>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <script type="module" src="game.js"></script>
+    <script type="module" src="network.js"></script>
+    <script type="module">
+        import { initNetwork } from './network.js';
+        
+        document.getElementById('btn-host').addEventListener('click', () => {
+            initNetwork(true);
+        });
+
+        document.getElementById('btn-join').addEventListener('click', () => {
+            const id = document.getElementById('join-id').value;
+            if (id) {
+                initNetwork(false, id);
+            } else {
+                alert('Lütfen bir ID girin!');
+            }
+        });
+    </script>
+</body>
+</html>
